@@ -8,10 +8,25 @@
 		<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
 		<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
 		<link href="/static/index.css" rel="stylesheet">
+		<script src="/nowjs/now.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<!--[if lt IE 9]>
      		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     	<![endif]-->
+
+    	<script>
+    		$(document).ready(function () {
+    			now.ready( function () {
+    				$("#registerButton").click(function () {
+    					now.tryRegister({
+    						username: $("#registerUsername").val(),
+    						password: $("#registerPassword").val(),
+    						email: $("#registerEmail").val()
+    					});
+    				});
+    			});
+    		});
+    	</script>
 
 	</head>
 
@@ -26,11 +41,11 @@
 				<div class="span12">
 					<form class="well">
 						<label>Username</label>
-						<input type="text" class="span3" placeholder="Pinkie Pie">
+						<input type="text" class="span3" id="registerUsername" placeholder="Pinkie Pie">
 						<label>Password</label>
-						<input type="password" class="span3" placeholder="huehuehue">
+						<input type="password" class="span3" id="registerPassword" placeholder="huehuehue">
 						<label>E-mail</label>
-						<input type="email" class="span3" placeholder="partyhardy@gmail.com">
+						<input type="email" class="span3" id="registerEmail" placeholder="partyhardy@gmail.com">
 						<label></label>
 						<button type="submit" id="registerButton" class="btn">Register</button>
 				</div>

@@ -27,5 +27,32 @@ server.get('/manage', function (req, res) {
 	res.render("manage");
 });
 
+everyone.now.tryRegister = function (userJSON) {
+	var username = userJSON.username
+	var password = userJSON.password
+	var email = userJSON.email
+	client.HMSET(username, {
+		"password" : password,
+		"email" : email,
+		"house" : "None"
+	});
+	console.log("haro")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 server.listen(80);
 console.log("Express server listening on port %d", server.address().port);
