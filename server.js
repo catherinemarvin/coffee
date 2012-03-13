@@ -28,15 +28,25 @@ server.get('/manage', function (req, res) {
 });
 
 everyone.now.tryRegister = function (userJSON) {
-	var username = userJSON.username
-	var password = userJSON.password
-	var email = userJSON.email
-	client.HMSET(username, {
-		"password" : password,
-		"email" : email,
-		"house" : "None"
+	var self = this;
+	var username = userJSON.username;
+	var password = userJSON.password;
+	var email = userJSON.email;
+	client.exists(username, function (err, obj) {
+		console.log(obj)
+		if (obj == 0) {
+			client.HMSET(username, {
+			"password" : password,
+			"email" : email,
+			"house" : "None"
+			});
+		} else {
+			console.log("haro")
+			self.now.failRegister()
+		}
 	});
-	console.log("haro")
+	
+
 }
 
 

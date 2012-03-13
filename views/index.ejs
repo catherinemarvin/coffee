@@ -24,6 +24,10 @@
     						email: $("#registerEmail").val()
     					});
     				});
+
+    				now.failRegister = function () {
+    					alert("Username taken; try again!");
+    				}
     			});
     		});
     	</script>
@@ -39,15 +43,14 @@
 
 			<div class="row">
 				<div class="span12">
-					<form class="well">
-						<label>Username</label>
-						<input type="text" class="span3" id="registerUsername" placeholder="Pinkie Pie">
-						<label>Password</label>
-						<input type="password" class="span3" id="registerPassword" placeholder="huehuehue">
-						<label>E-mail</label>
-						<input type="email" class="span3" id="registerEmail" placeholder="partyhardy@gmail.com">
-						<label></label>
-						<button type="submit" id="registerButton" class="btn">Register</button>
+					<label>Username</label>
+					<input type="text" class="span3" id="registerUsername" placeholder="Pinkie Pie">
+					<label>Password</label>
+					<input type="password" class="span3" id="registerPassword" placeholder="huehuehue">
+					<label>E-mail</label>
+					<input type="email" class="span3" id="registerEmail" placeholder="partyhardy@gmail.com">
+					<label></label>
+					<button id="registerButton" class="btn">Register</button>
 				</div>
 			</div>
 		</div>
