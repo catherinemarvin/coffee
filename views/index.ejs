@@ -10,6 +10,7 @@
 		<link href="/static/index.css" rel="stylesheet">
 		<script src="/nowjs/now.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="/static/jquery.cookie.js"></script>
 		<!--[if lt IE 9]>
      		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     	<![endif]-->
@@ -25,8 +26,24 @@
     					});
     				});
 
+    				$("#loginButton").click(function () {
+    					now.tryLogin({
+    						username: $("#loginUsername").val(),
+    						password: $("#loginUsername").val()
+    					});
+    				});
+
     				now.failRegister = function () {
     					alert("Username taken; try again!");
+    				}
+
+    				now.failLogin = function () {
+    					alert("Your credentials are wrong; try again!");
+    				}
+
+    				now.finishLogin = function (house) {
+    					$.cookie("house",house)
+    					window.location = "/manage";
     				}
     			});
     		});
@@ -43,14 +60,27 @@
 
 			<div class="row">
 				<div class="span12">
+					<h3>Register</h3>
 					<label>Username</label>
 					<input type="text" class="span3" id="registerUsername" placeholder="Pinkie Pie">
 					<label>Password</label>
-					<input type="password" class="span3" id="registerPassword" placeholder="huehuehue">
+					<input type="password" class="span3" id="registerPassword" placeholder="balloons">
 					<label>E-mail</label>
 					<input type="email" class="span3" id="registerEmail" placeholder="partyhardy@gmail.com">
 					<label></label>
 					<button id="registerButton" class="btn">Register</button>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="span12">
+					<h3>Log in
+					<label>Username</label>
+					<input type="text" class="span3" id="loginUsername" placeholder="Rarity">
+					<label>Password</label>
+					<input type="password" class="span3" id="loginPassword" placeholder="diamonds">
+					<label></label>
+					<button id="loginButton" class="btn">Login</button>
 				</div>
 			</div>
 		</div>

@@ -45,7 +45,27 @@ everyone.now.tryRegister = function (userJSON) {
 			self.now.failRegister()
 		}
 	});
-	
+}
+
+everyone.now.tryLogin = function (userJSON) {
+	var self = this;
+	var username = userJSON.username;
+	var password = userJSON.password;
+
+	client.exists(username, function (err, obj) {
+		console.log(obj)
+		if (obj == 1) {
+			client.hgetall(username, function (err, obj) {
+				if (obj.password == password) {
+					self.now.finishLogin(obj.house);
+				} else {
+					self.now.failLogin();
+				}
+			});
+		} else {
+			self.now.failLogin();
+		}
+	});
 
 }
 
