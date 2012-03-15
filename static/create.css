@@ -6,11 +6,3 @@ body {
 .sidebar-nav {
 	padding: 9px 0;
 }
-
-#choreDisplay {
-	display: none;
-}
-
-#createHouse {
-	display: none;
-}

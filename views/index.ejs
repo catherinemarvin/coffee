@@ -43,7 +43,15 @@
 
     				now.finishLogin = function (house) {
     					$.cookie("house",house)
-    					window.location = "/manage";
+    					console.log(house)
+    					if (house != "None") {
+							console.log("you have a house")
+							window.location = "/manage";
+							//todo: add house relevant initialization crap
+						} else {
+							window.location = "/splash";
+						}
+    					
     				}
     			});
     		});

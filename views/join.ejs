@@ -7,7 +7,7 @@
 
 		<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
 		<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
-		<link href="/static/manage.css" rel="stylesheet">
+		<link href="/static/join.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="/nowjs/now.js"></script>
 		<script src="/static/jquery.cookie.js"></script>
@@ -19,22 +19,16 @@
     	<script>
     	$(document).ready(function () {
 			now.ready( function () {
-				var initializePage = function () {
-					var house = $.cookie('house');
-					if (house != "None") {
-						console.log(house)
-						console.log("you have a house")
-						//todo: add house relevant initialization crap
-					} else {
-						console.log("no house :(")
-					}
+				now.joinHouse = function () {
+					var houseId = $("#houseCode").val();
+					now.tryJoin(houseId, function (ret) {
+						if (ret == "DNE") {
+							alert("Your house doesn't seem to exist")
+						} else if (ret == "success") {
+							alert("yay")
+						}
+					})
 				}
-
-				var toggleCreate = function () {
-    				$("#createHouse").slideToggle();
-    			}
-
-				initializePage();
 			});
     	});
 
@@ -49,33 +43,26 @@
 					<div class="well sidebar-nav">
 						<ul class="nav nav-list">
 							<li class="nav-header">Sidebar</li>
-							<li class="active"><a href="#">Home</a></li>
-							<li><a href="#">Create a House</a></li>
-							<li><a href="#">Join a house</a></li>
+							<li><a href="/">Home</a></li>
+							<li><a href="/create">Create a House</a></li>
+							<li class="active"><a href="/join">Join a house</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="span9">
 					<div class="row-fluid" id="joinHouse">
 						<h2>Join a house!</h2>
-						Before you can start using this site along with all its amazing features, you'll need to join a house first! Get your housemate(s) to e-mail you the link to join your house, then come back and see the changes.
+						You have two options:
+						<ol>
+							<li>Click on the link your friend gives you</li>
+							<li>Enter your (super secure) six-digit case sensitive code below</li>
+						</ol>
 
-						Or, you can create your own!
-					</div>
-				</div>
-
-				<div class="span9">
-					<div class="row-fluid" id="createHouse">
-						<div class="well">
-							<h2>Creating a house</h2>
-							It's as easy as inputting the house name and submitting! 
-						</div>
-					</div>
-				</div>
-
-				<div class="span9">
-					<div class="row-fluid" id="choreDisplay">
-						Display chores
+						It's probably easier to just click on the link, but just in case you really want to enter it manually, the box is here below.
+						<label></label>
+						<input type="text" id="houseCode">
+						<label></label>
+						<button type="submit" class="btn" onclick="now.joinHouse()">Submit</button>
 					</div>
 				</div>
 			</div>

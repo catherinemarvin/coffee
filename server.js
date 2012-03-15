@@ -8,6 +8,25 @@ var everyone = nowjs.initialize(server, {socketio:{"log level": process.argv[2]}
 
 var client = redis.createClient()
 
+/*
+Here I lay out the database design.
+
+Username -> Hash with these fields:
+	password
+	email
+	house
+
+houseId_members -> Set 
+
+houseId_chores -> Set of chore names
+	ex. dishes
+
+houseId_${CHORENAME} -> Sorted Set with:
+	Person NumTimesDone
+
+
+*/
+
 server.set('view options', {
 	layout: false
 });
@@ -26,6 +45,18 @@ server.get('/', function (req, res){
 server.get('/manage', function (req, res) {
 	res.render("manage");
 });
+
+server.get('/splash', function (req, res) {
+	res.render("splash");
+});
+
+server.get('/create', function (req, res) {
+	res.render("create");
+});
+
+server.get('/join', function (req, res) {
+	res.render("join");
+})
 
 everyone.now.tryRegister = function (userJSON) {
 	var self = this;
@@ -69,7 +100,18 @@ everyone.now.tryLogin = function (userJSON) {
 
 }
 
+everyone.now.tryJoin = function (houseId, cb) {
+	var self = this;
+	client.exists(houseId, function (err, obj) {
+		if (obj == 1) {
+			client.hgetall(houseId, function (err, obj) {
 
+			});
+		} else {
+			cb("DNE");
+		}
+	})
+}
 
 
 
