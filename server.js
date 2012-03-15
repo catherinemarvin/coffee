@@ -23,6 +23,7 @@ houseIds -> Set
 	contains all houseIds
 
 houseId_members -> Set 
+	ex. mordekaiser, rdash
 
 houseId_chores -> Set of chore names
 	ex. dishes
@@ -53,6 +54,13 @@ server.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 server.set('views', __dirname + '/views');
 server.use("/static", express.static(__dirname + '/static'));
 
+/* 
+
+Eventually I want there to be three pages only: splash page, pre-house, and house.
+
+For ease of testing everything is separated since I don't want to deal with the CSS.
+
+*/
 server.get('/', function (req, res){
 	res.render("index");
 });
@@ -103,7 +111,7 @@ everyone.now.tryLogin = function (userJSON) {
 		if (obj == 1) {
 			client.hgetall(username, function (err, obj) {
 				if (obj.password == password) {
-					self.now.finishLogin(obj.house);
+					self.now.finishLogin(username, obj.house);
 				} else {
 					self.now.failLogin();
 				}
@@ -118,7 +126,7 @@ everyone.now.tryLogin = function (userJSON) {
 everyone.now.tryJoin = function (houseId, cb) {
 	var self = this;
 	console.log("joining: " + houseId)
-	client.exists(houseId, function (err, obj) {
+	client.sismember("houseIds", houseId, function (err, obj) {
 		if (obj == 1) {
 			client.hgetall(houseId, function (err, obj) {
 
@@ -129,7 +137,7 @@ everyone.now.tryJoin = function (houseId, cb) {
 	});
 }
 
-everyone.now.generateId = function (cb) {
+everyone.now.generateId = function (username, cb) {
 	var self = this;
 	client.exists("maxHouseId", function (err, obj) {
 		if (obj == 0) {
@@ -154,8 +162,12 @@ everyone.now.generateId = function (cb) {
 				} else {
 					arg = res
 				}
+				console.log(arg);
+				console.log(username);
 				client.sadd("houseIds", arg, function (err, res) {
-					cb(arg)
+					client.hset(username, "house", arg, function (err, res) {
+						cb(arg);
+					});
 				});
 			});
 		}

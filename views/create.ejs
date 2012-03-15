@@ -23,7 +23,7 @@
 
 				now.createHouse = function () {
 					console.log("creating a house")
-					now.generateId(function (id) {
+					now.generateId($.cookie('username'), function (id) {
 						$.cookie("house",id);
 						console.log(id)
 						alert("Done!")

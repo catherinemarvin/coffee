@@ -41,7 +41,8 @@
     					alert("Your credentials are wrong; try again!");
     				}
 
-    				now.finishLogin = function (house) {
+    				now.finishLogin = function (username, house) {
+    					$.cookie("username", username)
     					$.cookie("house",house)
     					console.log(house)
     					if (house != "None") {
@@ -72,7 +73,7 @@
 					<label>Username</label>
 					<input type="text" class="span3" id="registerUsername" placeholder="Pinkie Pie">
 					<label>Password</label>
-					<input type="password" class="span3" id="registerPassword" placeholder="balloons">
+					<input type="password" class="span3" id="registerPassword">
 					<label>E-mail</label>
 					<input type="email" class="span3" id="registerEmail" placeholder="partyhardy@gmail.com">
 					<label></label>
@@ -86,7 +87,7 @@
 					<label>Username</label>
 					<input type="text" class="span3" id="loginUsername" placeholder="Rarity">
 					<label>Password</label>
-					<input type="password" class="span3" id="loginPassword" placeholder="diamonds">
+					<input type="password" class="span3" id="loginPassword">
 					<label></label>
 					<button id="loginButton" class="btn">Login</button>
 				</div>
