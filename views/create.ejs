@@ -11,6 +11,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="/nowjs/now.js"></script>
 		<script src="/static/jquery.cookie.js"></script>
+		<script src="/static/date.js"></script>
 		
 		<!--[if lt IE 9]>
      		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -19,7 +20,15 @@
     	<script>
     	$(document).ready(function () {
 			now.ready( function () {
-				
+
+				now.createHouse = function () {
+					console.log("creating a house")
+					now.generateId(function (id) {
+						$.cookie("house",id);
+						console.log(id)
+						alert("Done!")
+					});
+				}
 			});
     	});
 
@@ -44,7 +53,9 @@
 				<div class="span9">
 					<div class="row-fluid" id="createHouse">
 						<h2>Creating a house</h2>
-						It's as easy as inputting the house name and submitting! 
+						<p>You want to create a house, do you? You're in the right place! Just click the shiny button below and prepare your body.</p>
+
+						<p><button type="submit" class="btn" onclick="now.createHouse()">Create</button></p>
 					</div>
 				</div>
 			</div>

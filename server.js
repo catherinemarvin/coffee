@@ -16,13 +16,28 @@ Username -> Hash with these fields:
 	email
 	house
 
+maxHouseId -> String:
+	000000 (6 digit, increments by 1 each time)
+
+houseIds -> Set
+	contains all houseIds
+
 houseId_members -> Set 
 
 houseId_chores -> Set of chore names
 	ex. dishes
 
-houseId_${CHORENAME} -> Sorted Set with:
+houseId_chore_${CHORENAME}_people -> Sorted Set with elements:
 	Person NumTimesDone
+
+houseId_chore_${CHORENAME}_rotation -> List
+	["Daily"], ["Weekly","Monday"], ["Monthly","2"]
+
+houseId_todos -> Set of things to do
+
+houseId_todo_${TODONAME}_people -> Set with elements:
+	Person
+
 
 
 */
@@ -102,6 +117,7 @@ everyone.now.tryLogin = function (userJSON) {
 
 everyone.now.tryJoin = function (houseId, cb) {
 	var self = this;
+	console.log("joining: " + houseId)
 	client.exists(houseId, function (err, obj) {
 		if (obj == 1) {
 			client.hgetall(houseId, function (err, obj) {
@@ -110,10 +126,41 @@ everyone.now.tryJoin = function (houseId, cb) {
 		} else {
 			cb("DNE");
 		}
-	})
+	});
 }
 
-
+everyone.now.generateId = function (cb) {
+	var self = this;
+	client.exists("maxHouseId", function (err, obj) {
+		if (obj == 0) {
+			client.set("maxHouseId", "000000", function (err, res) {
+				cb("000000");
+			});
+		} else {
+			client.incr("maxHouseId", function (err, res) {
+				var res = parseInt(res)
+				var arg = null
+				/* Yes, this is probably the worst code I have ever written in my life */
+				if (res < 10) {
+					arg = "00000" + res;
+				} else if (res < 100) {
+					arg = "0000" + res;
+				} else if (res < 1000) {
+					arg = "000" + res;
+				} else if (res < 10000) {
+					arg = "00" + res;
+				} else if (res < 100000) {
+					arg = "0" + res;
+				} else {
+					arg = res
+				}
+				client.sadd("houseIds", arg, function (err, res) {
+					cb(arg)
+				});
+			});
+		}
+	});
+}
 
 
 
