@@ -11,8 +11,8 @@ var client = redis.createClient()
 /*
 Here I lay out the database design.
 
-Username -> Hash with these fields:
-	password
+user_Username -> Hash with these fields:
+	password //eventually this will be hashed but right now it's plain-text. :3
 	email
 	house
 
@@ -39,8 +39,6 @@ houseId_todos -> Set of things to do
 houseId_todo_${TODONAME}_people -> Set with elements:
 	Person
 
-
-
 */
 
 server.set('view options', {
@@ -58,7 +56,7 @@ server.use("/static", express.static(__dirname + '/static'));
 
 Eventually I want there to be three pages only: splash page, pre-house, and house.
 
-For ease of testing everything is separated since I don't want to deal with the CSS.
+For ease of testing everything is separated since I don't want to deal with the CSS. But soon!
 
 */
 server.get('/', function (req, res){
@@ -86,17 +84,19 @@ everyone.now.tryRegister = function (userJSON) {
 	var username = userJSON.username;
 	var password = userJSON.password;
 	var email = userJSON.email;
-	client.exists(username, function (err, obj) {
-		console.log(obj)
+	client.exists("user_"+username, function (err, obj) {
+		//console.log(obj)
 		if (obj == 0) {
-			client.HMSET(username, {
+			client.HMSET("user_"+username, {
 			"password" : password,
 			"email" : email,
 			"house" : "None"
+			}, function (err, res) {
+				self.now.finishRegister("user_"+username);
 			});
 		} else {
-			console.log("haro")
-			self.now.failRegister()
+			//console.log("haro")
+			self.now.failRegister();
 		}
 	});
 }
@@ -142,48 +142,33 @@ everyone.now.generateId = function (username, cb) {
 	client.exists("maxHouseId", function (err, obj) {
 		if (obj == 0) {
 			client.set("maxHouseId", "000000", function (err, res) {
-				cb("000000");
-			});
-		} else {
-			client.incr("maxHouseId", function (err, res) {
-				var res = parseInt(res)
-				var arg = null
-				/* Yes, this is probably the worst code I have ever written in my life */
-				if (res < 10) {
-					arg = "00000" + res;
-				} else if (res < 100) {
-					arg = "0000" + res;
-				} else if (res < 1000) {
-					arg = "000" + res;
-				} else if (res < 10000) {
-					arg = "00" + res;
-				} else if (res < 100000) {
-					arg = "0" + res;
-				} else {
-					arg = res
-				}
-				console.log(arg);
-				console.log(username);
-				client.sadd("houseIds", arg, function (err, res) {
-					client.hset(username, "house", arg, function (err, res) {
-						cb(arg);
-					});
-				});
 			});
 		}
+		client.incr("maxHouseId", function (err, res) {
+			var res = parseInt(res)
+			var arg = null
+			/* Yes, this is probably the worst code I have ever written in my life */
+			if (res < 10) {
+				arg = "00000" + res;
+			} else if (res < 100) {
+				arg = "0000" + res;
+			} else if (res < 1000) {
+				arg = "000" + res;
+			} else if (res < 10000) {
+				arg = "00" + res;
+			} else if (res < 100000) {
+				arg = "0" + res;
+			} else {
+				arg = res
+			}
+			client.sadd("houseIds", arg, function (err, res) {
+				client.hset(username, "house", arg, function (err, res) {
+					cb(arg);
+				});
+			});
+		});
 	});
 }
-
-
-
-
-
-
-
-
-
-
-
 
 server.listen(80);
 console.log("Express server listening on port %d", server.address().port);

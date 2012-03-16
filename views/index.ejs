@@ -42,17 +42,21 @@
     				}
 
     				now.finishLogin = function (username, house) {
-    					$.cookie("username", username)
-    					$.cookie("house",house)
+    					$.cookie("username", username);
+    					$.cookie("house",house);
     					console.log(house)
     					if (house != "None") {
-							console.log("you have a house")
 							window.location = "/manage";
 							//todo: add house relevant initialization crap
 						} else {
 							window.location = "/splash";
 						}
-    					
+    				}
+
+    				now.finishRegister = function (username) {
+    					$.cookie("username", username);
+    					$.cookie("house", "None");
+    					window.location = "/splash";
     				}
     			});
     		});
