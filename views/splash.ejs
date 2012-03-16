@@ -21,6 +21,42 @@
 			now.ready( function () {
 				console.log('username: '+$.cookie('username'))
 				console.log('house: ' + $.cookie('house'))
+
+				var username = $.cookie('username');
+
+				now.createHouse = function () {
+					console.log("creating a house")
+					now.generateId($.cookie('username'), function (id) {
+						$.cookie("house",id);
+						console.log(id)
+						alert("Done!")
+					});
+				}
+
+				now.joinHouse = function () {
+					var houseId = $("#houseCode").val();
+					now.tryJoin(username, houseId, function (ret) {
+						if (ret == "DNE") {
+							alert("Your house doesn't seem to exist")
+						} else if (ret == "success") {
+							$.cookie('house',houseId);
+							alert("yay")
+						}
+					})
+				}
+
+				//hides the active div, displays the arg, and changes the highlight on the left
+				now.toggleDiv = function (div) {
+					var activeLi = $("li.active");
+					var activeDivId = activeLi.attr('id');
+					var oldDiv = activeDivId + "Div";
+					console.log(oldDiv);
+					$("#"+div).slideToggle();
+					$("#"+oldDiv).slideToggle();
+					activeLi.attr('class','');
+					var newActive = div.slice(0,-3) //crucial: assume div is of the form nameDiv
+					$("#"+newActive).attr('class','active');
+				}
 			});
     	});
 
@@ -35,18 +71,42 @@
 					<div class="well sidebar-nav">
 						<ul class="nav nav-list">
 							<li class="nav-header">Sidebar</li>
-							<li class="active"><a href="#">Home</a></li>
-							<li><a href="/create">Create a House</a></li>
-							<li><a href="/join">Join a house</a></li>
+							<li id="home" class="active"><a href="#" onclick="now.toggleDiv('homeDiv')">Home</a></li>
+							<li id="create"><a href="#" onclick="now.toggleDiv('createDiv')">Create a House</a></li>
+							<li id="join"><a href="#" onclick="now.toggleDiv('joinDiv')">Join a house</a></li>
 						</ul>
 					</div>
 				</div>
+
 				<div class="span9">
-					<div class="row-fluid" id="joinHouse">
-						<h2>Join a house!</h2>
+
+					<div class="row-fluid" id="homeDiv">
+						<h2>Welcome!</h2>
 						Before you can start using this site along with all its amazing features, you'll need to join a house first! Get your housemate(s) to e-mail you the link to join your house, then come back and see the changes.
 
 						Or, you can create your own!
+					</div>
+
+					<div class="row-fluid" id="createDiv">
+						<h2>Creating a house</h2>
+						<p>You want to create a house, do you? You're in the right place! Just click the shiny button below and prepare your body.</p>
+
+						<p><button type="submit" class="btn" onclick="now.createHouse()">Create</button></p>
+					</div>
+
+					<div class="row-fluid" id="joinDiv">
+						<h2>Join a house!</h2>
+						You have two options:
+						<ol>
+							<li>Click on the link your friend gives you</li>
+							<li>Enter your (super secure) six-digit case sensitive code below</li>
+						</ol>
+
+						It's probably easier to just click on the link, but just in case you really want to enter it manually, the box is here below.
+						<label></label>
+						<input type="text" id="houseCode">
+						<label></label>
+						<button type="submit" class="btn" onclick="now.joinHouse()">Submit</button>
 					</div>
 				</div>
 			</div>

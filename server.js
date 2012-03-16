@@ -17,7 +17,8 @@ user_Username -> Hash with these fields:
 	house
 
 maxHouseId -> String:
-	000000 (6 digit, increments by 1 each time)
+	000000 (6 digit, increments by 1 each time).
+	//TODO: Use an actual UUID
 
 houseIds -> Set
 	contains all houseIds
@@ -70,14 +71,6 @@ server.get('/manage', function (req, res) {
 server.get('/splash', function (req, res) {
 	res.render("splash");
 });
-
-server.get('/create', function (req, res) {
-	res.render("create");
-});
-
-server.get('/join', function (req, res) {
-	res.render("join");
-})
 
 everyone.now.tryRegister = function (userJSON) {
 	var self = this;

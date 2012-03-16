@@ -6,3 +6,11 @@ body {
 .sidebar-nav {
 	padding: 9px 0;
 }
+
+#createDiv {
+	display: none;
+}
+
+#joinDiv {
+	display: none;
+}
