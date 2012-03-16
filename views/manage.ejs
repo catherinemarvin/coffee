@@ -19,8 +19,8 @@
     	<script>
     	$(document).ready(function () {
 			now.ready( function () {
-				console.log('username: '+$.cookie('username'))
-				console.log('house: ' + $.cookie('house'))
+				console.log('username: '+$.cookie('username'));
+				console.log('house: ' + $.cookie('house'));
 			});
     	});
 
@@ -35,17 +35,30 @@
 					<div class="well sidebar-nav">
 						<ul class="nav nav-list">
 							<li class="nav-header">Sidebar</li>
-							<li class="active"><a href="#">Home</a></li>
-							<li><a href="#">Manage crap</a></li>
-							<li><a href="#">or whatever</a></li>
+							<li id="home" class="active"><a href="#">Home</a></li>
+							<li id="chores"><a href="#">Chores</a></li>
+							<li id="todos"><a href="#">Todos</a></li>
+							<li id="bills"><a href="#">Bills</a></li>
 						</ul>
 					</div>
 				</div>
 
 				<div class="span9">
-					<div class="row-fluid" id="choreDisplay">
+					<div class="row-fluid" id="homeDiv">
+						<h2>Welcome!</h2>
+						What are you waiting for? GET STARTED!
+					</div>
+					<div class="row-fluid" id="choresDiv">
 						<h2>CHORES!</h2>
 						You have a lot of them, unfortunately.
+					</div>
+					<div class="row-fluid" id="todosDiv">
+						<h2>TODOS!</h2>
+						todo: add relevant content
+					</div>
+					<div class="row-fluid" id="billsDiv">
+						<h2>BILLS!</h2>
+						Ducks have them.
 					</div>
 				</div>
 			</div>

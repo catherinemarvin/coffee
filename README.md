@@ -4,4 +4,4 @@
 
 ##What is it?
 
-Manage chores, TODOs, and recurring bills.
+Manage chores, TODOs, and recurring bills. Stay organized and on top of everything.
