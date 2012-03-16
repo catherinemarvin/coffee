@@ -92,7 +92,7 @@ everyone.now.tryRegister = function (userJSON) {
 			"email" : email,
 			"house" : "None"
 			}, function (err, res) {
-				self.now.finishRegister("user_"+username);
+				self.now.finishRegister(username);
 			});
 		} else {
 			//console.log("haro")
@@ -123,13 +123,13 @@ everyone.now.tryLogin = function (userJSON) {
 
 }
 
-everyone.now.tryJoin = function (houseId, cb) {
+everyone.now.tryJoin = function (username, houseId, cb) {
 	var self = this;
 	console.log("joining: " + houseId)
 	client.sismember("houseIds", houseId, function (err, obj) {
 		if (obj == 1) {
-			client.hgetall(houseId, function (err, obj) {
-
+			client.hset('user_'+username, 'house', houseId, function (err, obj) {
+				cb("success");
 			});
 		} else {
 			cb("DNE");

@@ -42,7 +42,7 @@
     				}
 
     				now.finishLogin = function (username, house) {
-    					$.cookie("username", username.substr(5));
+    					$.cookie("username",username);
     					$.cookie("house",house);
     					if (house != "None") {
 							window.location = "/manage";

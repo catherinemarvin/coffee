@@ -19,12 +19,15 @@
     	<script>
     	$(document).ready(function () {
 			now.ready( function () {
+				var username = $.cookie('username');
+
 				now.joinHouse = function () {
 					var houseId = $("#houseCode").val();
-					now.tryJoin(houseId, function (ret) {
+					now.tryJoin(username, houseId, function (ret) {
 						if (ret == "DNE") {
 							alert("Your house doesn't seem to exist")
 						} else if (ret == "success") {
+							$.cookie('house',houseId);
 							alert("yay")
 						}
 					})
