@@ -106,10 +106,10 @@ everyone.now.tryLogin = function (userJSON) {
 	var username = userJSON.username;
 	var password = userJSON.password;
 
-	client.exists(username, function (err, obj) {
+	client.exists("user_"+username, function (err, obj) {
 		console.log(obj)
 		if (obj == 1) {
-			client.hgetall(username, function (err, obj) {
+			client.hgetall("user_"+username, function (err, obj) {
 				if (obj.password == password) {
 					self.now.finishLogin(username, obj.house);
 				} else {

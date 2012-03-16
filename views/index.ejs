@@ -29,7 +29,7 @@
     				$("#loginButton").click(function () {
     					now.tryLogin({
     						username: $("#loginUsername").val(),
-    						password: $("#loginUsername").val()
+    						password: $("#loginPassword").val()
     					});
     				});
 
@@ -42,9 +42,8 @@
     				}
 
     				now.finishLogin = function (username, house) {
-    					$.cookie("username", username);
+    					$.cookie("username", username.substr(5));
     					$.cookie("house",house);
-    					console.log(house)
     					if (house != "None") {
 							window.location = "/manage";
 							//todo: add house relevant initialization crap
