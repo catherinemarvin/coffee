@@ -6,3 +6,15 @@ body {
 .sidebar-nav {
 	padding: 9px 0;
 }
+
+#choresDiv {
+	display: none;
+}
+
+#todosDiv {
+	display: none;
+}
+
+#billsDiv {
+	display: none;
+}

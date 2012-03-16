@@ -21,6 +21,21 @@
 			now.ready( function () {
 				console.log('username: '+$.cookie('username'));
 				console.log('house: ' + $.cookie('house'));
+
+				//hides the active div, displays the arg, and changes the highlight on the left
+				//super janky, but totally works, so don't knock it
+				now.toggleDiv = function (div) {
+					var activeLi = $("li.active");
+					var activeDivId = activeLi.attr('id');
+					var oldDiv = activeDivId + "Div";
+					console.log(oldDiv);
+					$("#"+div).slideToggle();
+					$("#"+oldDiv).slideToggle();
+					activeLi.attr('class','');
+					var newActive = div.slice(0,-3) //crucial: assume div is of the form nameDiv
+					$("#"+newActive).attr('class','active');
+				}
+
 			});
     	});
 
@@ -35,10 +50,10 @@
 					<div class="well sidebar-nav">
 						<ul class="nav nav-list">
 							<li class="nav-header">Sidebar</li>
-							<li id="home" class="active"><a href="#">Home</a></li>
-							<li id="chores"><a href="#">Chores</a></li>
-							<li id="todos"><a href="#">Todos</a></li>
-							<li id="bills"><a href="#">Bills</a></li>
+							<li id="home" class="active" onclick="now.toggleDiv('homeDiv')"><a href="#">Home</a></li>
+							<li id="chores"><a href="#" onclick="now.toggleDiv('choresDiv')">Chores</a></li>
+							<li id="todos"><a href="#" onclick="now.toggleDiv('todosDiv')">Todos</a></li>
+							<li id="bills"><a href="#" onclick="now.toggleDiv('billsDiv')">Bills</a></li>
 						</ul>
 					</div>
 				</div>
