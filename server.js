@@ -22,12 +22,13 @@ maxHouseId -> String:
 
 houseIds -> Set
 	contains all houseIds
+	ex. {000001, 000002}
 
 houseId_members -> Set 
-	ex. mordekaiser, rdash
+	ex. {mordekaiser, rdash}
 
 houseId_chores -> Set of chore names
-	ex. dishes
+	ex. {dishes, trash}
 
 houseId_chore_${CHORENAME}_people -> Sorted Set with elements:
 	Person NumTimesDone
@@ -36,6 +37,7 @@ houseId_chore_${CHORENAME}_rotation -> List
 	["Daily"], ["Weekly","Monday"], ["Monthly","2"]
 
 houseId_todos -> Set of things to do
+	ex. {"Complain about faucet", "annoy neighbors"}
 
 houseId_todo_${TODONAME}_people -> Set with elements:
 	Person
@@ -163,5 +165,24 @@ everyone.now.generateId = function (username, cb) {
 	});
 }
 
-server.listen(15750);
+everyone.now.getChores = function (house, cb) {
+	var self = this;
+	client.sismember("houseIds", houseId, function (err, obj) {
+		if (obj == 0) {
+			cb("failure")
+		} else {
+			client.smembers(house+"_chores", function (err, obj) {
+				console.log("members")
+				console.log(obj)
+			})
+		}
+	})
+}
+
+everyone.now.insertChore = function (house, chore, cb) {
+	var self = this;
+	//todo: finish
+}
+
+server.listen(80);
 console.log("Express server listening on port %d", server.address().port);

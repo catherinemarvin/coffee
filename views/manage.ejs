@@ -22,13 +22,14 @@
 				console.log('username: '+$.cookie('username'));
 				console.log('house: ' + $.cookie('house'));
 
+				var house = $.cookie('house')
+
 				//hides the active div, displays the arg, and changes the highlight on the left
 				//super janky, but totally works, so don't knock it
 				now.toggleDiv = function (div) {
 					var activeLi = $("li.active");
 					var activeDivId = activeLi.attr('id');
 					var oldDiv = activeDivId + "Div";
-					console.log(oldDiv);
 					$("#"+div).slideToggle();
 					$("#"+oldDiv).slideToggle();
 					activeLi.attr('class','');
@@ -36,6 +37,29 @@
 					$("#"+newActive).attr('class','active');
 				}
 
+				now.loadChores = function () {
+					now.getChores(house, function (data) { //data is a list of JSON of: {chore, rotation, person}
+						if (data != "failure") {
+							for (row in data) {
+								var choreName = row.chore;
+								var choreRotation = row.rotation;
+								var chorePerson = row.person;
+
+								var toInsert = "<tr><td>"+choreName+"</td><td>"+choreRotation+"</td><td>"+chorePerson+"</td></tr>";
+								$("#choresTable").append(toInsert);
+							}
+						}
+					});
+				}
+
+				now.addChore = function () {
+					var choreName = $("#choreName").val();
+					now.insertChore(house, choreName, function (data) {
+						if (data == "done") {
+							alert('woo')
+						}
+					})
+				}
 			});
     	});
 
@@ -65,7 +89,29 @@
 					</div>
 					<div class="row-fluid" id="choresDiv">
 						<h2>CHORES!</h2>
-						You have a lot of them, unfortunately.
+						<p>You have a lot of them, unfortunately.</p>
+
+						<p><input type="text" id="choreName"></input></p>
+						<p><button class="btn" onclick="now.addChore()">ADD CHORE</button></p>
+
+						<table class="table" id="choresTable">
+							<thead>
+								<tr>
+									<th>Chore</th>
+									<th>Rotates</th>
+									<th>Current</th>
+								</tr>
+							</thead>
+							<tbody id="choresBody">
+								<tr>
+									<td>Annoy neighbors</td>
+									<td>Weekly</td>
+									<td>Bob</td>
+								</tr>
+							</tbody>
+						</table>
+
+
 					</div>
 					<div class="row-fluid" id="todosDiv">
 						<h2>TODOS!</h2>
