@@ -75,6 +75,12 @@ server.get('/splash', function (req, res) {
 	res.render("splash");
 });
 
+server.get('/lookupmembers/:house', function (req, res) {
+	console.log(req.params.house)
+	var foo = [{"id":"856","name":"House"}, {"id":"1035","name":"Desperate Housewives"}, {"id":"1048","name":"Dollhouse"}, {"id":"1113","name":"Full House"}]
+	res.send(foo);
+});
+
 everyone.now.tryRegister = function (userJSON) {
 	var self = this;
 	var username = userJSON.username;

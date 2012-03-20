@@ -8,9 +8,11 @@
 		<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
 		<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
 		<link href="/static/manage.css" rel="stylesheet">
+		<link href="/static/token-input.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="/nowjs/now.js"></script>
 		<script src="/static/jquery.cookie.js"></script>
+		<script src="/static/jquery.tokeninput.js"></script>
 		
 		<!--[if lt IE 9]>
      		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -23,6 +25,8 @@
 				console.log('house: ' + $.cookie('house'));
 
 				var house = $.cookie('house')
+
+				$("#chorePerson").tokenInput("/lookupmembers/"+house);
 
 				//hides the active div, displays the arg, and changes the highlight on the left
 				//super janky, but totally works, so don't knock it
