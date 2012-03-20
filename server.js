@@ -33,8 +33,9 @@ houseId_chores -> Set of chore names
 houseId_chore_${CHORENAME}_people -> Sorted Set with elements:
 	Person NumTimesDone
 
-houseId_chore_${CHORENAME}_rotation -> List
-	["Daily"], ["Weekly","Monday"], ["Monthly","2"]
+houseId_chore_${CHORENAME}_rotation -> String
+	"Daily"
+	"Weekly:Monday"
 
 houseId_todos -> Set of things to do
 	ex. {"Complain about faucet", "annoy neighbors"}
@@ -158,30 +159,74 @@ everyone.now.generateId = function (username, cb) {
 			}
 			client.sadd("houseIds", arg, function (err, res) {
 				client.hset(username, "house", arg, function (err, res) {
-					cb(arg);
+					client.sadd(arg+"_members", username, function (err, res) {
+						cb(arg);
+					});	
 				});
 			});
 		});
 	});
 }
 
-everyone.now.getChores = function (house, cb) {
+everyone.now.getChores = function (house) {
 	var self = this;
-	client.sismember("houseIds", houseId, function (err, obj) {
+	console.log("GRABBING CHORES");
+	client.sismember("houseIds", house, function (err, obj) {
 		if (obj == 0) {
-			cb("failure")
+			console.log('wat')
 		} else {
-			client.smembers(house+"_chores", function (err, obj) {
-				console.log("members")
-				console.log(obj)
-			})
+			client.smembers(house+"_chores", function (err, obj) { //cb arg: a list of JSON of: {chore, rotation, person}
+				var toReturn = []
+				for (item in obj) {
+					var chore = obj[item]
+					client.zrange(house+"_chore_"+obj[item]+"_people", 0,-1, function (err, obj) {
+						var person = obj[0]
+						client.get(house+"_chore_"+chore+"_rotation", function (err, obj) {
+							var rotation = obj;
+							//cb({"chore" : chore, "rotation" : rotation, "person" : person});
+							self.now.appendChore({"chore" : chore, "rotation" : rotation, "person" : person});
+						});
+					});
+				}
+			});
 		}
-	})
+	});
 }
 
-everyone.now.insertChore = function (house, chore, cb) {
+/*
+houseId_chores -> Set of chore names
+	ex. {dishes, trash}
+
+houseId_chore_${CHORENAME}_people -> Sorted Set with elements:
+	Person NumTimesDone
+
+houseId_chore_${CHORENAME}_rotation -> String
+	"Daily"
+	"Weekly:Monday"
+
+	cb("done")
+*/
+
+everyone.now.insertChore = function (choreJSON, cb) {
 	var self = this;
-	//todo: finish
+	var house = choreJSON.house;
+	var person = choreJSON.person;
+	var rotation = choreJSON.rotation
+	var chore = choreJSON.chore
+	client.sismember(house+"_chores", chore, function (err, obj) {
+		if (obj == 1) {
+			cb("failure");
+		} else {
+			client.sadd(house+"_chores", chore, function (err, obj) {
+				client.zadd(house+"_chore_"+chore+"_people", 0, person, function (err, obj) {
+					client.set(house+"_chore_"+chore+"_rotation", rotation, function (err, obj) {
+						cb("done")
+					})
+				})
+				
+			});
+		}
+	});
 }
 
 server.listen(80);

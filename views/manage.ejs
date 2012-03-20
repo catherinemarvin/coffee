@@ -38,27 +38,39 @@
 				}
 
 				now.loadChores = function () {
-					now.getChores(house, function (data) { //data is a list of JSON of: {chore, rotation, person}
-						if (data != "failure") {
-							for (row in data) {
-								var choreName = row.chore;
-								var choreRotation = row.rotation;
-								var chorePerson = row.person;
+					console.log('loading chores');
+					now.getChores(house);
+				}
 
-								var toInsert = "<tr><td>"+choreName+"</td><td>"+choreRotation+"</td><td>"+chorePerson+"</td></tr>";
-								$("#choresTable").append(toInsert);
-							}
-						}
-					});
+				now.appendChore = function (data) {
+					console.log(data)
+					if (data != "failure") {
+						var choreName = data["chore"];
+						var choreRotation = data["rotation"];
+						var chorePerson = data["person"];
+
+						var toInsert = "<tr><td>"+choreName+"</td><td>"+choreRotation+"</td><td>"+chorePerson+"</td></tr>";
+						$("#choresTable").append(toInsert);
+					}
 				}
 
 				now.addChore = function () {
 					var choreName = $("#choreName").val();
-					now.insertChore(house, choreName, function (data) {
+					var choreRotation = $("#choreRotation").val();
+					var chorePerson = $("#chorePerson").val();
+					now.insertChore({
+						'house': house, 
+						'chore': choreName,
+						'rotation': choreRotation,
+						'person' : chorePerson }, function (data) {
 						if (data == "done") {
-							alert('woo')
+							alert('woo');
+						} else if (data == "failure") {
+							alert(":(");
+						} else {
+							alert('wtf');
 						}
-					})
+					});
 				}
 			});
     	});
@@ -91,8 +103,11 @@
 						<h2>CHORES!</h2>
 						<p>You have a lot of them, unfortunately.</p>
 
-						<p><input type="text" id="choreName"></input></p>
+						<p><input type="text" id="choreName" placeholder="dishes"></input></p>
+						<p><input type="text" id="choreRotation" placeholder="daily"></input></p>
+						<p><input type="text" id="chorePerson" placeholder="sally"></input></p>
 						<p><button class="btn" onclick="now.addChore()">ADD CHORE</button></p>
+						<p><button class="btn" onclick="now.loadChores()">LOAD CHORES</button></p>
 
 						<table class="table" id="choresTable">
 							<thead>
