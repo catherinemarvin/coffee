@@ -28,8 +28,9 @@
 					console.log("creating a house")
 					now.generateId($.cookie('username'), function (id) {
 						$.cookie("house",id);
-						console.log(id)
-						alert("Done!")
+						console.log(id);
+						alert("Done! Click ok to be redirected.");
+						window.location = "/manage";
 					});
 				}
 
@@ -40,7 +41,8 @@
 							alert("Your house doesn't seem to exist")
 						} else if (ret == "success") {
 							$.cookie('house',houseId);
-							alert("yay")
+							alert("Joined! Click ok to be redirected.");
+							window.location = "/manage";
 						}
 					})
 				}

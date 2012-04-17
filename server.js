@@ -76,9 +76,20 @@ server.get('/splash', function (req, res) {
 });
 
 server.get('/lookupmembers/:house', function (req, res) {
-	console.log(req.params.house)
-	var foo = [{"id":"856","name":"House"}, {"id":"1035","name":"Desperate Housewives"}, {"id":"1048","name":"Dollhouse"}, {"id":"1113","name":"Full House"}]
-	res.send(foo);
+	var house = req.params.house;
+	console.log("Looking up " + req.params.house);
+	client.smembers(house+"_members", function (err, obj) {
+		var ret = [];
+		console.log("House members: "+obj);
+		for (i in obj) {
+			var token = {'id' : i, 'name' : obj[i] }
+			ret.push(token)
+		}
+		res.send(ret);
+	})
+
+	//var foo = [{"id":"856","name":"House"}, {"id":"1035","name":"Desperate Housewives"}, {"id":"1048","name":"Dollhouse"}, {"id":"1113","name":"Full House"}]
+
 });
 
 everyone.now.tryRegister = function (userJSON) {
@@ -131,7 +142,9 @@ everyone.now.tryJoin = function (username, houseId, cb) {
 	client.sismember("houseIds", houseId, function (err, obj) {
 		if (obj == 1) {
 			client.hset('user_'+username, 'house', houseId, function (err, obj) {
-				cb("success");
+				client.sadd(houseId+"_members", username, function (err, obj) {
+					cb("success");
+				});
 			});
 		} else {
 			cb("DNE");
@@ -140,6 +153,7 @@ everyone.now.tryJoin = function (username, houseId, cb) {
 }
 
 everyone.now.generateId = function (username, cb) {
+	console.log("generating ID")
 	var self = this;
 	client.exists("maxHouseId", function (err, obj) {
 		if (obj == 0) {
@@ -163,9 +177,11 @@ everyone.now.generateId = function (username, cb) {
 			} else {
 				arg = res
 			}
+			console.log("house to add: " + arg)
 			client.sadd("houseIds", arg, function (err, res) {
-				client.hset(username, "house", arg, function (err, res) {
+				client.hset("user_"+username, "house", arg, function (err, res) {
 					client.sadd(arg+"_members", username, function (err, res) {
+						console.log("house members set added")
 						cb(arg);
 					});	
 				});
