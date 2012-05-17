@@ -192,13 +192,16 @@ everyone.now.generateId = function (username, cb) {
 
 everyone.now.getChores = function (house) {
 	var self = this;
-	console.log("GRABBING CHORES");
+	console.log("GRABBING CHORES FOR: " + house);
 	client.sismember("houseIds", house, function (err, obj) {
 		if (obj == 0) {
 			console.log('wat')
 		} else {
-			client.smembers(house+"_chores", function (err, obj) { //cb arg: a list of JSON of: {chore, rotation, person}
-				var toReturn = []
+			client.smembers(house+"_chores", function (err, obj) {
+				for (item in obj) {
+					everyone.now.processChores(self, house, obj[item]);
+				}
+				/* 
 				for (item in obj) {
 					var chore = obj[item]
 					client.zrange(house+"_chore_"+obj[item]+"_people", 0,-1, function (err, obj) {
@@ -210,8 +213,21 @@ everyone.now.getChores = function (house) {
 						});
 					});
 				}
+				*/
 			});
 		}
+	});
+}
+
+everyone.now.processChores = function (self, house, chore) {
+	console.log("MY CHORE IS: "+chore);
+	client.zrange(house+"_chore_"+chore+"_people", 0,-1, function (err, obj) {
+		var person = obj[0]
+		client.get(house+"_chore_"+chore+"_rotation", function (err, obj) {
+			var rotation = obj;
+			//cb({"chore" : chore, "rotation" : rotation, "person" : person});
+			self.now.appendChore({"chore" : chore, "rotation" : rotation, "person" : person});
+		});
 	});
 }
 
@@ -232,7 +248,7 @@ houseId_chore_${CHORENAME}_rotation -> String
 everyone.now.insertChore = function (choreJSON, cb) {
 	var self = this;
 	var house = choreJSON.house;
-	var person = choreJSON.person;
+	var person = choreJSON.person; //this is actually a list of people
 	var rotation = choreJSON.rotation
 	var chore = choreJSON.chore
 	client.sismember(house+"_chores", chore, function (err, obj) {
