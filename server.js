@@ -256,14 +256,29 @@ everyone.now.insertChore = function (choreJSON, cb) {
 			cb("failure");
 		} else {
 			client.sadd(house+"_chores", chore, function (err, obj) {
+				for (i in person) {
+					everyone.now.insertPersonToChore(chore, house, person[i], rotation )
+				}
+				cb('done')
+				
+				/*
 				client.zadd(house+"_chore_"+chore+"_people", 0, person, function (err, obj) {
 					client.set(house+"_chore_"+chore+"_rotation", rotation, function (err, obj) {
 						cb("done")
 					})
 				})
+				*/
 				
 			});
 		}
+	});
+}
+
+everyone.now.insertPersonToChore = function (chore, house, person, rotation) {
+	client.zadd(house+"_chore_"+chore+"_people", 0, person, function (err, obj) {
+		client.set(house+"_chore_"+chore+"_rotation", rotation, function (err, obj) {
+			console.log("person added");
+		});
 	});
 }
 

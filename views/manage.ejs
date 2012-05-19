@@ -63,8 +63,8 @@
 					var choreName = $("#choreName").val();
 					var choreRotation = $("#choreRotation").val();
 					//var chorePerson = $("#chorePerson").val();
-					for (i = 0; i < $(".token-input-list").length; i++){
-						var str = $(".token-input-list")[i].firstChild.textContent;
+					for (i = 0; i < $(".token-input-list")[0].children.length - 1; i++) {
+						var str = $(".token-input-list")[0].children[i].textContent
 						chorePeople.push(str.substring(0,str.length-1));
 					}
 					console.log("ADDING CHORE WITH PEOPLE");
@@ -129,11 +129,6 @@
 								</tr>
 							</thead>
 							<tbody id="choresBody">
-								<tr>
-									<td>Annoy neighbors</td>
-									<td>Weekly</td>
-									<td>Bob</td>
-								</tr>
 							</tbody>
 						</table>
 
