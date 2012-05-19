@@ -17,6 +17,27 @@
 
     	<script>
     		$(document).ready(function () {
+    			//auto log-in/register on enter here
+
+    			$(document).keyup(function (e) {
+    				if (e.which === 13) {
+    					var focusID = $(document.activeElement).attr('id');
+    					console.log(focusID);
+    					if (focusID === undefined) {
+    						//do nothing
+    					} else if (focusID.substring(0,5) === "login") {
+    						$("#loginButton").click();
+    					} else if (focusID.substring(0,5) === "regis") {
+    						$("#registerButton").click();
+    					} else {
+    						console.log('wat');
+    					}
+    				}	
+    			});
+
+
+
+
     			now.ready( function () {
     				$("#registerButton").click(function () {
     					now.tryRegister({
